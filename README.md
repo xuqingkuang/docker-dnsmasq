@@ -2,27 +2,26 @@
 
 dnsmasq in a docker container, configurable via a [simple web UI](https://github.com/jpillora/webproc)
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jpillora/dnsmasq.svg)][dockerhub]
-[![Image Size](https://images.microbadger.com/badges/image/jpillora/dnsmasq.svg)][dockerhub]
+[![Docker Pulls](https://img.shields.io/docker/pulls/xuqingkuang/dnsmasq.svg)][dockerhub]
+[![Image Size (latest)](https://img.shields.io/docker/image-size/xuqingkuang/dnsmasq/latest)][dockerhub]
 
-### Usage
+## Usage
 
 1. Create a [`/opt/dnsmasq.conf`](http://oss.segetech.com/intra/srv/dnsmasq.conf) file on the Docker host
 
    ```ini
-   #dnsmasq config, for a complete example, see:
-   #  http://oss.segetech.com/intra/srv/dnsmasq.conf
-   #log all dns queries
+   # dnsmasq config, for a complete example, see: http://oss.segetech.com/intra/srv/dnsmasq.conf
+   # log all dns queries
    log-queries
-   #dont use hosts nameservers
+   # dont use hosts nameservers
    no-resolv
-   #use cloudflare as default nameservers, prefer 1^4
+   # use cloudflare as default nameservers, prefer 1^4
    server=1.0.0.1
    server=1.1.1.1
    strict-order
-   #serve all .company queries using a specific nameserver
+   # serve all .company queries using a specific nameserver
    server=/company/10.0.0.1
-   #explicitly define host-ip mappings
+   # explicitly define host-ip mappings
    address=/myhost.company/10.0.0.2
    ```
 
@@ -33,16 +32,16 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
    	--name dnsmasq \
    	-d \
    	-p 53:53/udp \
-   	-p 5380:8080 \
+   	-p 8053:8080 \
    	-v /opt/dnsmasq.conf:/etc/dnsmasq.conf \
    	--log-opt "max-size=100m" \
    	-e "HTTP_USER=foo" \
    	-e "HTTP_PASS=bar" \
    	--restart always \
-   	jpillora/dnsmasq
+   	xuqingkuang/dnsmasq
    ```
 
-1. Visit `http://<docker-host>:5380`, authenticate with `foo/bar` and you should see
+1. Visit `http://<docker-host>:8053`, authenticate with `foo/bar` and you should see
 
    <img width="833" alt="screen shot 2017-10-15 at 1 41 21 am" src="https://user-images.githubusercontent.com/633843/31580966-baacba62-b1a9-11e7-8439-ca1ddfe828dd.png">
 
@@ -58,9 +57,17 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
    myhost.company has address 10.0.0.2
    ```
 
-#### MIT License
+## How to build the image.
 
-Copyright &copy; 2018 Jaime Pillora &lt;dev@jpillora.com&gt;
+Follow the guide - https://docs.docker.com/build/building/multi-platform/ or execut the command:
+
+```
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t <username>/<image>:latest --push .
+```
+
+## MIT License
+
+Copyright &copy; 2018 Jaime Pillora &lt;dev@jpillora.com&gt; &amp; Xuqing Kuang &lt;x@kxq.io&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -81,4 +88,4 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[dockerhub]: https://hub.docker.com/r/jpillora/dnsmasq/
+[dockerhub]: https://hub.docker.com/r/xuqingkuang/dnsmasq/
